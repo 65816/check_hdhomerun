@@ -6,7 +6,17 @@ in nagios could tell you if recording is in progress.
 
 # Example
 
-bash check_hdhomerun.sh -f <response text> -i <hdhomerun_id> -t <tuner> -c <command> -s <subcommand> -x <additonal subcommands> -y <additonal subcommands> -z <additonal subcommands>
+check_hdhomerun.sh
+	
+command line options:
+	-f response text
+	-i hdhomerun tuner id
+	-t tuner number
+	-c command
+	-s sub command
+	-x addional subcommands (if -f is not found)
+	-y addional subcommands (if -f is not found)
+	-z addional subcommands (if -f is not found)
 
 bash check_hdhomerun.sh -f none -i HDHR_ID -t 2 -c get -s status -x vchannel -y lockkey
 
