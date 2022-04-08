@@ -12,11 +12,32 @@ if [ ! -f $HR_BIN ]; then
 	exit 3
 fi
 
-while getopts ":i:" opt; do
+while getopts ":f:i:t:c:s:x:y:z:" opt; do
     case $opt in
+        f)
+	    FLAG=$OPTARG
+	    ;;
         i)
             HR_ID=$OPTARG
-        ;;
+	    ;;
+        t)
+	    TUNER=tuner$OPTARG
+	    ;;
+	c)
+	    CMD=$OPTARG
+	    ;;
+	s)
+	    SUB=$OPTARG
+            ;;
+        x)
+	    ALT1=$OPTARG
+	    ;;
+        y)
+            ALT2=$OPTARG
+	    ;;
+        z)
+	    ALT3=$OPTARG
+	    ;;
         
         \?)
             echo "Invalid option: -$OPTARG" >&2
@@ -30,20 +51,48 @@ while getopts ":i:" opt; do
     esac
 done
 
-TUNER0_CH=`$HR_BIN $HR_ID get /tuner0/channel`
-TUNER1_CH=`$HR_BIN $HR_ID get /tuner1/channel`
+if [ -z "$HR_ID" ]
+then
+	echo "HR ID required"
+	exit 3
+fi
 
-if [ "$TUNER0_CH" == "none" ] && [ "$TUNER1_CH" == "none" ]; then
-	echo "No channels currently tuned"
-	exit 0
-fi
-if [ "$TUNER0_CH" != "none" ] || [ "$TUNER1_CH" != "none" ]; then
-	echo "Channel currently tuned!"
-	if [ "$TUNER0_CH" != "none" ]; then
-		echo "Tuner 0: $TUNER0_CH"
+OUTPUT=`$HR_BIN $HR_ID $CMD /$TUNER/$SUB`
+echo $SUB: $OUTPUT
+
+case "$OUTPUT" in
+	*$FLAG* ) NONE=true;;
+esac
+
+if [[ $NONE = "true" ]]
+then
+    #echo "true"
+    exit 0
+else
+	if [ -z "$ALT1" ]
+       	then
+		ALT1="nothing"
+	else
+	    OUTPUT=`$HR_BIN $HR_ID $CMD /$TUNER/$ALT1`
+	    echo $ALT1: $OUTPUT
 	fi
-	if [ "$TUNER1_CH" != "none" ]; then
-		echo "Tuner 1: $TUNER1_CH"
+
+	if [ -z "$ALT2" ]
+       	then
+		ALT2="nothing"
+	else
+            OUTPUT=`$HR_BIN $HR_ID $CMD /$TUNER/$ALT2`
+            echo $ALT2: $OUTPUT
 	fi
-	exit 1
+
+	if [ -z "$ALT3" ]
+       	then
+		ALT3="nothing"
+	else
+            OUTPUT=`$HR_BIN $HR_ID $CMD /$TUNER/$ALT3`
+            echo $ALT3: $OUTPUT
+	fi
+
+    exit 1
 fi
+
