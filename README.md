@@ -2,13 +2,24 @@
 
 This plugin will allow you to check if your HD Homerun is currently tuned to any channels.  This could 
 be useful if you want to upgrade for example a Plex server that is currently recording.  One glance
-in Icinga2 could tell you if recording is in progress.
+in nagios could tell you if recording is in progress.
 
 # Example
 
-![Icinga not tuned](/icinga-not-tuned.png)
-![Icinga tuned](/icinga-tuned.png)
+bash check_hdhomerun.sh -f <response text> -i <hdhomerun_id> -t <tuner> -c <command> -s <subcommand> -x <additonal subcommands> -y <additonal subcommands> -z <additonal subcommands>
 
+bash check_hdhomerun.sh -f none -i HDHR_ID -t 2 -c get -s status -x vchannel -y lockkey
+
+Example of tuner not busy: 
+	
+status: ch=none lock=none ss=0 snq=0 seq=0 bps=0 pps=0
+
+Example of tuner busy:
+	
+status: ch=8vsb:527000000 lock=8vsb ss=54 snq=82 seq=100 bps=5373792 pps=460
+vchannel: 2.1
+lockkey: 192.168.33.30
+	
 # Requirements
 
 * hdhomerun-config
