@@ -29,6 +29,10 @@ Example of tuner busy:
 status: ch=8vsb:527000000 lock=8vsb ss=54 snq=82 seq=100 bps=5373792 pps=460
 vchannel: 2.1
 lockkey: 192.168.33.30
+
+exit code 0 if tuner not busy
+exit code 1 if it is
+exit code 3 if the command didn't run correctly
 	
 # Requirements
 
